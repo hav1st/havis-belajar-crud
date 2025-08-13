@@ -15,20 +15,28 @@
                     <table class="w-full text-gray-500">
                         <thead class="bg-gray-50">
                             <td class="p-2">NO</td>
+                            <td class="p-2">GAMBAR</td>
                             <td class="p-2">NAMA PRODUK</td>
+                            <td class="p-2">DESKRIPSI</td>
                             <td class="p-2">STOK</td>
                             <td class="p-2">HARGA</td>
-                            <td class="p-2">BARCODE</td>
                             <td class="p-2">AKSI</td>
                         </thead>
                         <tbody>
                             @foreach ($products as $p)
                             <tr class="border-b">
                             <td class="p-2">{{ $loop->iteration }}</td>
+                            <td class="p-2">
+                                @if($p->image)
+                                <img src="{{ asset('storage/' . $p->image) }}"
+                                 alt="Gambar {{ $p->name }}"
+                                 class="h-16 w-16 object-cover rounded">
+                                 @endif
+                            </td>
                             <td class="p-2">{{ $p->name}}</td>
+                            <td class="p-2">{{ $p->description}}</td>
                             <td class="p-2">{{ $p->stock }}</td>
                             <td class="p-2">{{ $p->price }}</td>
-                            <td class="p-2">{{ $p->barcode }}</td>
                             <td class="p-2">
                                 <a href="/product/{{ $p->id }}/edit">
                                     <x-primary-button>Edit</x-primary-button>

@@ -31,12 +31,19 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'stock' => 'required|integer',
-            'price' => 'required|numeric',
-            'barcode' => 'required|unique:products',
+            'description' => 'required',            
+            'price' => 'required',
+            'stock' => 'required',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        Product::create($request->all());
+        $data = $request->only(['name', 'description', 'price', 'stock']);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        Product::create($data);
 
         return redirect()->route('product.index');
     }
@@ -65,12 +72,21 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'stock' => 'required|integer',
-            'price' => 'required|numeric',
-            'barcode' => 'required|unique:products,barcode,' . $id,
+            'description' => 'required',            
+            'price' => 'required',
+            'stock' => 'required',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048' . $id,
         ]);
 
-        Product::find($id)->update($request->all());
+        $data = $request->only(['name', 'description', 'price', 'stock']);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $data['image'] = $imagePath;
+        }
+        $product = Product::findOrFail($id);
+
+        $product->update($data);
+
         return redirect()->route('product.index');
     }
 
